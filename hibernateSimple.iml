@@ -13,7 +13,9 @@
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="hibernateSimple" value="af047e24-34b1-4430-b111-30eedccc1bbe" />
+        </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>

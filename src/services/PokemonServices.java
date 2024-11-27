@@ -1,11 +1,14 @@
 package services;
 
 import config.HibernateConfig;
+import model.Adestrador;
 import model.Pokedex;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class PokemonServices {
@@ -35,7 +38,7 @@ public class PokemonServices {
                 gato.setMisc(newMisc);
                 session.update(gato);
             } else {
-                System.out.println("Gato non encontrado para actualizar.");
+                System.out.println("Pokemon non encontrado para actualizar.");
             }
             transaction.commit();
         } catch (Exception e) {
@@ -62,14 +65,50 @@ public class PokemonServices {
         }
     }
 
-
-
     public List<Pokedex> listarPokemon() {
         try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             return session.createQuery("from Pokedex", Pokedex.class).getResultList();
         } catch (Exception e) {
             System.out.println("Erro ao lista-los pokemon: " + e.getMessage());
             return null;
+        }
+    }
+
+    public void crearAdestrador(String nome, LocalDate nacemento) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Adestrador adestrador = new Adestrador();
+            adestrador.setNome(nome);
+            adestrador.setNacemento(nacemento);
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Erro ao crea-lo adestradr: " + e.getMessage());
+        }
+    }
+
+    public List<Adestrador> listarAdestrador() {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            return session.createQuery("from Adestrador", Adestrador.class).getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao lista-los adestradores: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void actualizarAdestrador(int id, String nome, LocalDate nacemento) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Adestrador adestrador = session.get(Adestrador.class, id);
+            if (adestrador != null) {
+                adestrador.setNome(nome);
+                adestrador.setNacemento(nacemento);
+                session.update(adestrador);
+            } else {
+                System.out.println("Adestrador non encontrado para actualizar.");
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Erro ao actualiza-lo adestrador: " + e.getMessage());
         }
     }
 }

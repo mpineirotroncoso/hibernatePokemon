@@ -1,9 +1,11 @@
 import config.HibernateConfig;
+import model.Adestrador;
 import model.Pokedex;
 import org.hibernate.Session;
 import services.PokemonServices;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
@@ -34,15 +36,28 @@ public class Main {
 
         pokemonServices.eliminarPokemons();
 
-        //EXEMPLOS CON ID que non se deben facer
-        /*
-        gatosServices.actualizarGato(1L, "Paturras", "Siames", 3, "Beixe", new BigDecimal("4.7"), new Date(), true, "Carlos");
-        gatosServices.actualizarGato(2L, "Lua", "Persa", 4, "Branca", new BigDecimal("5.3"), new Date(), true, "Maria");
+        pokemonServices.crearPokemon("Pikachu", new BigDecimal("6.0"), "Electrico");
+        pokemonServices.crearPokemon("Charmander", new BigDecimal("8.0"), "Fuego");
+        pokemonServices.crearPokemon("Bulbasaur", new BigDecimal("7.0"), "Planta");
+        pokemonServices.crearPokemon("Squirtle", new BigDecimal("9.0"), "Agua");
+        pokemonServices.crearPokemon("Jigglypuff", new BigDecimal("5.0"), "Normal");
+        pokemonServices.crearPokemon("Meowth", new BigDecimal("4.0"), "Normal");
+        pokemonServices.crearPokemon("Psyduck", new BigDecimal("6.0"), "Agua");
+        pokemonServices.crearPokemon("Machop", new BigDecimal("8.0"), "Lucha");
+        pokemonServices.crearPokemon("Geodude", new BigDecimal("7.0"), "Roca");
+        pokemonServices.crearPokemon("Gastly", new BigDecimal("5.0"), "Fantasma");
 
-        gatosServices.lerGato(1L);
-        gatosServices.lerGato(2L);
-        */
+        pokemonServices.crearAdestrador("Ash Ketchum", LocalDate.ofEpochDay(1996));
+        pokemonServices.crearAdestrador("Misty", LocalDate.ofEpochDay(1996));
 
+        pokemonServices.listarPokemon();
+        pokemonServices.listarAdestrador();
+        for (Adestrador adestrador : pokemonServices.listarAdestrador()) {
+            System.out.println(adestrador);
+        }
+
+        pokemonServices.actualizarAdestrador(1, "Ash Ketchum", LocalDate.ofEpochDay(1998));
+        pokemonServices.actualizarAdestrador(2, "Misty", LocalDate.ofEpochDay(1998));
 
 
     }
