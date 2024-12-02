@@ -6,6 +6,11 @@ import model.Pokedex;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
@@ -31,12 +36,12 @@ public class PokemonServices {
     public void actualizarPokemon(int id, String newNombre, BigDecimal newPeso, String newMisc) {
         try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
-            Pokedex gato = session.get(Pokedex.class, id);
-            if (gato != null) {
-                gato.setNome(newNombre);
-                gato.setPeso(newPeso);
-                gato.setMisc(newMisc);
-                session.update(gato);
+            Pokedex pokemon = session.get(Pokedex.class, id);
+            if (pokemon != null) {
+                pokemon.setNome(newNombre);
+                pokemon.setPeso(newPeso);
+                pokemon.setMisc(newMisc);
+                session.update(pokemon);
             } else {
                 System.out.println("Pokemon non encontrado para actualizar.");
             }
@@ -80,6 +85,7 @@ public class PokemonServices {
             Adestrador adestrador = new Adestrador();
             adestrador.setNome(nome);
             adestrador.setNacemento(nacemento);
+            session.save(adestrador);
             transaction.commit();
         } catch (Exception e) {
             System.out.println("Erro ao crea-lo adestradr: " + e.getMessage());
@@ -109,6 +115,110 @@ public class PokemonServices {
             transaction.commit();
         } catch (Exception e) {
             System.out.println("Erro ao actualiza-lo adestrador: " + e.getMessage());
+        }
+    }
+
+    public void eliminarAdestradores() {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.createQuery("delete from Adestrador").executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Erro ao eliminar os adestradores: " + e.getMessage());
+        }
+    }
+
+    public void pokedexToXml() {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            List<Pokedex> pokedexes = session.createQuery("from Pokedex", Pokedex.class).getResultList();
+            if (!pokedexes.isEmpty()) {
+                try (FileWriter fileWriter = new FileWriter("pokedex.xml")) {
+                    XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+                    XMLStreamWriter xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(fileWriter);
+
+                    xmlStreamWriter.writeStartDocument();
+                    xmlStreamWriter.writeStartElement("Pokedexes");
+
+                    for (Pokedex pokedex : pokedexes) {
+                        xmlStreamWriter.writeStartElement("Pokedex");
+
+                        xmlStreamWriter.writeStartElement("id");
+                        xmlStreamWriter.writeCharacters(String.valueOf(pokedex.getId()));
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeStartElement("nome");
+                        xmlStreamWriter.writeCharacters(pokedex.getNome());
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeStartElement("peso");
+                        xmlStreamWriter.writeCharacters(pokedex.getPeso().toString());
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeStartElement("misc");
+                        xmlStreamWriter.writeCharacters(pokedex.getMisc());
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeEndElement(); // End Pokedex
+                    }
+
+                    xmlStreamWriter.writeEndElement(); // End Pokedexes
+                    xmlStreamWriter.writeEndDocument();
+
+                    xmlStreamWriter.flush();
+                    xmlStreamWriter.close();
+                } catch (IOException | XMLStreamException e) {
+                    System.out.println("Erro ao escribir a XML: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Non hai pokedexes para convertir a XML.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao convertir a XML: " + e.getMessage());
+        }
+    }
+
+    public void adestradorToXml() {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            List<Adestrador> adestradores = session.createQuery("from Adestrador", Adestrador.class).getResultList();
+            if (!adestradores.isEmpty()) {
+                try (FileWriter fileWriter = new FileWriter("adestradores.xml")) {
+                    XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+                    XMLStreamWriter xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(fileWriter);
+
+                    xmlStreamWriter.writeStartDocument();
+                    xmlStreamWriter.writeStartElement("Adestradores");
+
+                    for (Adestrador adestrador : adestradores) {
+                        xmlStreamWriter.writeStartElement("Adestrador");
+
+                        xmlStreamWriter.writeStartElement("id");
+                        xmlStreamWriter.writeCharacters(String.valueOf(adestrador.getId()));
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeStartElement("nome");
+                        xmlStreamWriter.writeCharacters(adestrador.getNome());
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeStartElement("nacemento");
+                        xmlStreamWriter.writeCharacters(adestrador.getNacemento().toString());
+                        xmlStreamWriter.writeEndElement();
+
+                        xmlStreamWriter.writeEndElement(); // End Adestrador
+                    }
+
+                    xmlStreamWriter.writeEndElement(); // End Adestradores
+                    xmlStreamWriter.writeEndDocument();
+
+                    xmlStreamWriter.flush();
+                    xmlStreamWriter.close();
+                } catch (IOException | XMLStreamException e) {
+                    System.out.println("Erro ao escribir a XML: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Non hai adestradores para convertir a XML.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao convertir a XML: " + e.getMessage());
         }
     }
 }

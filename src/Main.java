@@ -36,6 +36,10 @@ public class Main {
 
         pokemonServices.eliminarPokemons();
 
+        /**
+         * Hibernate 2
+         */
+
         pokemonServices.crearPokemon("Pikachu", new BigDecimal("6.0"), "Electrico");
         pokemonServices.crearPokemon("Charmander", new BigDecimal("8.0"), "Fuego");
         pokemonServices.crearPokemon("Bulbasaur", new BigDecimal("7.0"), "Planta");
@@ -58,6 +62,15 @@ public class Main {
 
         pokemonServices.actualizarAdestrador(1, "Ash Ketchum", LocalDate.ofEpochDay(1998));
         pokemonServices.actualizarAdestrador(2, "Misty", LocalDate.ofEpochDay(1998));
+
+        pokemonServices.actualizarPokemon(1, "Raichu", new BigDecimal("7.0"), "Electrico");
+        pokemonServices.actualizarPokemon(2, "Charmeleon", new BigDecimal("9.0"), "Fuego");
+
+        pokemonServices.pokedexToXml();
+        pokemonServices.adestradorToXml();
+
+        pokemonServices.eliminarPokemons();
+        pokemonServices.eliminarAdestradores();
 
 
     }
