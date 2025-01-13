@@ -1,6 +1,7 @@
 import config.HibernateConfig;
 import model.Adestrador;
 import model.Pokedex;
+import model.Pokemon;
 import org.hibernate.Session;
 import services.PokemonServices;
 
@@ -21,7 +22,7 @@ public class Main {
         pokemonServices.crearPokemon("Bulbasaur", new BigDecimal("7.0"), "Planta");
 
         System.out.println("Listado de todos os pokemon:");
-        List<Pokedex> pokemonList = pokemonServices.listarPokemon();
+        List<Pokedex> pokemonList = pokemonServices.listarPokedex();
         for (Pokedex pokemon : pokemonList) {
             System.out.println(pokemon);
         }
@@ -29,7 +30,7 @@ public class Main {
         pokemonServices.actualizarPokemon(1, "Raichu", new BigDecimal("7.0"), "Electrico");
         pokemonServices.actualizarPokemon(2, "Charmeleon", new BigDecimal("9.0"), "Fuego");
 
-        pokemonList = pokemonServices.listarPokemon();
+        pokemonList = pokemonServices.listarPokedex();
         for (Pokedex pokemon : pokemonList) {
             System.out.println(pokemon);
         }
@@ -54,7 +55,7 @@ public class Main {
         pokemonServices.crearAdestrador("Ash Ketchum", LocalDate.ofEpochDay(1996));
         pokemonServices.crearAdestrador("Misty", LocalDate.ofEpochDay(1996));
 
-        pokemonServices.listarPokemon();
+        pokemonServices.listarPokedex();
         pokemonServices.listarAdestrador();
         for (Adestrador adestrador : pokemonServices.listarAdestrador()) {
             System.out.println(adestrador);
@@ -72,7 +73,64 @@ public class Main {
         pokemonServices.eliminarPokemons();
         pokemonServices.eliminarAdestradores();
 
+        /**
+         * Hibernate 3
+         */
 
+        pokemonServices.crearPokemon("Pikachu", new BigDecimal("6.0"), "Electrico");
+        pokemonServices.crearPokemon("Charmander", new BigDecimal("8.0"), "Fuego");
+        pokemonServices.crearPokemon("Bulbasaur", new BigDecimal("7.0"), "Planta");
+        pokemonServices.crearPokemon("Squirtle", new BigDecimal("9.0"), "Agua");
+        pokemonServices.crearPokemon("Jigglypuff", new BigDecimal("5.0"), "Normal");
+        pokemonServices.crearPokemon("Meowth", new BigDecimal("4.0"), "Normal");
+        pokemonServices.crearPokemon("Psyduck", new BigDecimal("6.0"), "Agua");
+        pokemonServices.crearPokemon("Machop", new BigDecimal("8.0"), "Lucha");
+        pokemonServices.crearPokemon("Geodude", new BigDecimal("7.0"), "Roca");
+        pokemonServices.crearPokemon("Gastly", new BigDecimal("5.0"), "Fantasma");
+
+        pokemonServices.crearAdestrador("Ash Ketchum", LocalDate.ofEpochDay(1996));
+        pokemonServices.crearAdestrador("Misty", LocalDate.ofEpochDay(1996));
+
+        pokemonServices.addPokemonToAdestrador("Pikachu", LocalDate.ofEpochDay(1996), 70, 13);
+
+        for (Pokedex pokemon : pokemonServices.listarPokedex()) {
+            System.out.println(pokemon);
+        }
+        for (Adestrador adestrador : pokemonServices.listarAdestrador()) {
+            System.out.println(adestrador);
+        }
+        for (Pokemon pokemon : pokemonServices.listarPokemon()) {
+            System.out.println(pokemon);
+        }
+
+        pokemonServices.serializePokedex();
+
+        pokemonServices.adestradorToXML();
+
+        pokemonServices.actualizarAdestrador(1, "Ash Ketchum", LocalDate.ofEpochDay(1998));
+        pokemonServices.actualizarAdestrador(2, "Misty", LocalDate.ofEpochDay(1998));
+
+        pokemonServices.actualizarPokemon(1, "Raichu", new BigDecimal("7.0"), "Electrico");
+        pokemonServices.actualizarPokemon(2, "Charmeleon", new BigDecimal("9.0"), "Fuego");
+        pokemonServices.actualizarPokemon(3, "Ivysaur", new BigDecimal("8.0"), "Planta");
+        pokemonServices.actualizarPokemon(4, "Wartortle", new BigDecimal("10.0"), "Agua");
+
+
+        pokemonServices.listarPokedex();
+        pokemonServices.listarAdestrador();
+        pokemonServices.listarPokemon();
+
+        pokemonServices.importSerializedPokedex();
+
+        pokemonServices.importXMLToAdestrador("adestradores.xml");
+
+        pokemonServices.listarPokedex();
+        pokemonServices.listarAdestrador();
+        pokemonServices.listarPokemon();
+
+        pokemonServices.eliminarPokemons();
+        pokemonServices.eliminarAdestradores();
+        pokemonServices.eliminarPokedex();
     }
     public  static  void PostgresVersion()
     {
